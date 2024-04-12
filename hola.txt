@@ -1,0 +1,991 @@
+#Pratical 4
+
+1.Create an application to demonstrate implict and explict intents
+
+2.Create an application to demonstrate shared prefrences
+
+#AndroidManifest file
+
+android:theme="@style/Theme.AppCompat"
+android:theme="@style/Theme.AppCompat"
+
+#Gradle Script.kts(Module:app)
+
+implementation("com.google.android.material:material:1.11.0")
+
+#MainActivity.kt
+
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.widget.EditText
+import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.databasewithsharedpreferences.ui.theme.DataBaseWithSharedPreferencesTheme
+
+class MainActivity : AppCompatActivity() {
+    lateinit var name:EditText
+    lateinit var age:EditText
+    @SuppressLint("MissingInflatedId")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        name=findViewById(R.id.edit1)
+        age=findViewById(R.id.edit2)
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        val sh = getSharedPreferences("MySharedPref", MODE_PRIVATE)
+        val s1 = sh.getString("name", "")
+        val a = sh.getInt("age", 0)
+
+        name.setText(s1)
+        age.setText(a.toString())
+    }
+    override fun onPause() {
+        super.onPause()
+        val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
+        val myEdit = sharedPreferences.edit()
+        myEdit.putString("name", name.text.toString())
+        myEdit.putInt("age", age.text.toString().toInt())
+        myEdit.apply()
+        }
+
+}
+
+#main_activity.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:text="Shared Preferences Demo"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+    <EditText
+        android:id="@+id/edit1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/textview"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Enter your Name"
+        android:padding="10dp" />
+    <EditText
+        android:id="@+id/edit2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/edit1"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Enter your Age"
+        android:inputType="number"
+        android:padding="10dp"/>
+
+</RelativeLayout>
+
+
+#Pratical 5
+
+1.Create an application to demonstrate the use of Brodcast Listeners
+
+#AiroplaneModeChangeReceiver
+
+#AndroidManifest file
+
+android:theme="@style/Theme.AppCompat"
+android:theme="@style/Theme.AppCompat"
+
+#Gradle Script.kts(Module:app)
+
+implementation("com.google.android.material:material:1.11.0")
+
+#Mainactivity.kt
+
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.content.Intent
+import android.content.IntentFilter
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+    lateinit var receiver: AirplaneModeChangeReceiver
+    @SuppressLint("SuspiciousIndentation")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        receiver = AirplaneModeChangeReceiver()
+
+
+        IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED).also {
+
+            registerReceiver(receiver, it)
+        }
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
+    }
+}
+
+#Create new kotlin fiile
+
+#click>>Kotlin+java>>right click on com.example.appname>>new>>Kotlin class/file>>AirplaneModeChangeReceiver
+
+#AirplaneModeChangeReceiver.kt
+
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.widget.Toast
+
+class AirplaneModeChangeReceiver : BroadcastReceiver() {
+
+    override fun onReceive(context: Context?, intent: Intent?) {
+
+        val isAirplaneModeEnabled = intent?.getBooleanExtra("state", false) ?: return
+
+        if (isAirplaneModeEnabled) {
+
+            Toast.makeText(context, "Airplane Mode Enabled", Toast.LENGTH_LONG).show()
+        } else {
+
+            Toast.makeText(context, "Airplane Mode Disabled", Toast.LENGTH_LONG).show()
+        }
+    }
+
+}
+
+#activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+</LinearLayout>
+
+2.Create an Android Application to create and use Services
+
+#MainActivity.kt
+
+
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Button
+import androidx.activity.ComponentActivity
+
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        val button: Button = findViewById(R.id.button)
+        button.setOnClickListener { startService(Intent(applicationContext, MyService::class.java)) }
+    }
+}
+
+#AndroidManifest file
+
+android:theme="@style/Theme.Services"
+android:theme="@style/Theme.Services"
+
+##Create new kotlin fiile
+
+#click>>Kotlin+java>>right click on com.example.appname>>new>>Kotlin class/file>>MyService.kt
+
+#MyService.kt
+
+import android.app.Service
+import android.content.Intent
+import android.os.IBinder
+import android.widget.Toast
+
+class MyService : Service() {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        onTaskRemoved(intent)
+        Toast.makeText(
+            applicationContext, "This is a Service running in Background",
+            Toast.LENGTH_SHORT
+        ).show()
+        return START_STICKY
+    }
+    override fun onBind(intent: Intent): IBinder? {
+        throw UnsupportedOperationException("Not yet implemented")
+    }
+    override fun onTaskRemoved(rootIntent: Intent) {
+        val restartServiceIntent = Intent(applicationContext, this.javaClass)
+        restartServiceIntent.setPackage(packageName)
+        startService(restartServiceIntent)
+        super.onTaskRemoved(rootIntent)
+    }
+}
+
+#main_activity.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click here to start background Service"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+</LinearLayout>
+
+
+#Pratical 6
+
+1. Create an Android Application to demonstrate XML based Animation
+
+#activity_main.xml
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/BTNblink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:text="Blink"
+  />
+    <Button
+        android:id="@+id/BTNfade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Fade"
+        />
+
+    <TextView android:id="@+id/txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Getting Animated"/>
+
+</LinearLayout>
+
+
+#MainActivity.kt
+
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.widget.Button
+import androidx.activity.ComponentActivity
+import android.view.animation.AnimationUtils;
+import android.widget.TextView
+
+
+class MainActivity : ComponentActivity() {
+    @SuppressLint("MissingInflatedId")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        val blinkBTN = findViewById<Button>(R.id.BTNblink);
+        val fadeBTN = findViewById<Button>(R.id.BTNfade);
+        val txt=findViewById<TextView>(R.id.txt)
+
+        blinkBTN.setOnClickListener {
+            val a=AnimationUtils.loadAnimation(applicationContext,R.anim.blink_animation)
+            txt.startAnimation(a)
+        }
+
+        fadeBTN.setOnClickListener {
+            val a=AnimationUtils.loadAnimation(applicationContext,R.anim.fade_animation)
+            txt.startAnimation(a)
+        }
+    }
+}
+
+
+
+2. Create an Android application to display canvas and allow the user to draw on it.
+
+#activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/image_view_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+       tools:ignore="ContentDescription"
+        android:background="@color/black"/>
+
+
+</LinearLayout>
+
+#MainActivity.kt
+
+
+import android.os.Bundle
+import android.view.View
+
+import androidx.activity.ComponentActivity
+
+
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.os.Build
+
+import android.view.MotionEvent
+
+import android.widget.ImageView
+import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.canvastest.ui.theme.CanvastestTheme
+
+class MainActivity : ComponentActivity() ,View.OnTouchListener {
+    private lateinit var mImageView: ImageView
+    private lateinit var bitmap: Bitmap
+    private lateinit var canvas: Canvas
+    private lateinit var paint: Paint
+    private var downX = 0f
+    private var downY = 0f
+    private var upX = 0f
+    private var upY = 0f
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    @SuppressLint("ClickableViewAccessibility")
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        mImageView = findViewById(R.id.image_view_1)
+
+      
+        val currentDisplay = windowManager.currentWindowMetrics
+        val dw = currentDisplay.bounds.width()
+        val dh = currentDisplay.bounds.height()
+
+        
+        bitmap = Bitmap.createBitmap(dw, dh, Bitmap.Config.ARGB_8888)
+
+        
+        canvas = Canvas(bitmap)
+        paint = Paint()
+        paint.color = Color.RED
+        paint.strokeWidth = 10F
+        mImageView.setImageBitmap(bitmap)
+        mImageView.setOnTouchListener(this)
+
+
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        when (event!!.action) {
+            MotionEvent.ACTION_DOWN -> {
+                downX = event.x
+                downY = event.y
+            }
+
+            MotionEvent.ACTION_UP -> {
+                upX = event.x
+                upY = event.y
+                canvas.drawLine(downX, downY, upX, upY, paint)
+                mImageView.invalidate()
+            }
+        }
+        return true
+    }
+
+}
+
+Practical no 7
+
+1. Create a media player application in android that plays audio. Implement play,  pause, and loop features.
+
+#step 1 :-download the song (minimun 3 to 5 mb)
+#step 2 :-copy the song
+#step 3 :- open android studio and right click on Drawable folder click on open in >> Explorer 
+#step 4 :-open(double click) Drawable folder and paste the song  
+
+
+#activity_main.xml
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/headingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:text="MEDIA PLAYER"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headingText"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/stopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+
+            android:text="STOP"
+            />
+
+        <Button
+            android:id="@+id/playButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+
+            android:text="PLAY"
+             />
+
+        <Button
+            android:id="@+id/pauseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="PAUSE"
+           />
+
+    </LinearLayout>
+
+</LinearLayout>
+
+#MainActivity.kt
+
+import android.media.MediaPlayer
+import android.os.Bundle
+import android.widget.Button
+import androidx.activity.ComponentActivity
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        val mediaPlayer: MediaPlayer = MediaPlayer.create(applicationContext, R.raw.music1)
+        val bPlay: Button = findViewById(R.id.playButton)
+        val bPause: Button = findViewById(R.id.pauseButton)
+        val bStop: Button = findViewById(R.id.stopButton)
+
+        bPlay.setOnClickListener {
+                        mediaPlayer.start()
+        }
+
+        bPause.setOnClickListener {
+
+            mediaPlayer.pause()
+        }
+
+        bStop.setOnClickListener {
+
+            mediaPlayer.stop()
+            mediaPlayer.prepare()
+        }
+    }
+}
+
+
+2. Create an Android application to display canvas and allow the user to draw on it.
+
+#activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/camera_button"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="150dp"
+        android:text="Camera" />
+    <ImageView
+        android:id="@+id/click_image"
+        android:layout_width="350dp"
+        android:layout_height="450dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="10dp" />
+
+</LinearLayout>
+
+#AndroidManifest file
+
+android:theme="@style/Theme.AppCompat"
+android:theme="@style/Theme.AppCompat"
+
+#Gradle Script.kts(Module:app)
+
+implementation("com.google.android.material:material:1.11.0")
+
+
+#MainActivity.kt
+
+import android.content.Intent
+import android.graphics.Bitmap
+import android.os.Bundle
+import android.provider.MediaStore
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var cameraOpenId: Button
+    lateinit var clickImageId: ImageView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        cameraOpenId = findViewById(R.id.camera_button)
+        clickImageId = findViewById(R.id.click_image)
+
+        cameraOpenId.setOnClickListener(View.OnClickListener { v: View? ->
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(cameraIntent, pic_id)
+        })
+
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == pic_id) {
+            val photo = data!!.extras!!["data"] as Bitmap?
+            clickImageId.setImageBitmap(photo)
+        }
+    }
+
+    companion object {
+        private const val pic_id = 123
+    }
+}
+
+
+#Practical no 8
+
+#Create an Android application to demonstrate the different types of menus.
+a. Pop-up Menu     b. Context Menu     c. Option Menu
+
+#activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+   <androidx.appcompat.widget.Toolbar
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/t1"/>
+
+
+</LinearLayout>
+
+#opitions_menu1.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:icon="@drawable/baseline_3d_rotation_24"
+    android:title="Rotation"
+    android:id="@+id/item1"
+    android:showAsAction="always"/>
+
+
+    <item android:id="@+id/item2"
+        android:icon="@drawable/baseline_4g_mobiledata_24"
+        android:title="Data"
+        android:showAsAction="ifRoom"/>
+</menu>
+
+#MainActivity.kt
+
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.menuexample.ui.theme.MenuexampleTheme
+
+class MainActivity : AppCompatActivity() {
+    @SuppressLint("MissingInflatedId")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        setSupportActionBar(findViewById(R.id.t1))
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.options_menu1,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId){
+            R.id.item1 -> Toast.makeText(this,"About Selected",Toast.LENGTH_SHORT).show()
+            R.id.item2 -> Toast.makeText(this,"Settings Selected",Toast.LENGTH_SHORT).show()
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
+}
+
+#Practical no 10
+
+#Create a suitable Android application to store and retrieve data in the SQLite database.
+
+#activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- Edit text to enter name -->
+    <EditText
+        android:id="@+id/enterName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Name"
+        android:textSize="22sp"
+        android:layout_margin="20sp"/>
+    <EditText
+        android:id="@+id/enterAge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20sp"
+        android:textSize="22sp"
+        android:hint="Enter Age"/>
+    <Button
+        android:id="@+id/addName"
+        android:layout_width="150sp"
+        android:layout_gravity="center"
+        android:background="@color/purple_200"
+        android:text="Add Name"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"/>
+    <Button
+        android:id="@+id/printName"
+        android:layout_width="150sp"
+        android:layout_gravity="center"
+        android:background="@color/purple_200"
+        android:text="Print Name"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/Name"
+            android:textAlignment="center"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20sp"
+            android:text="Name\n\n"
+            android:textSize="22sp"
+            android:padding="10sp"
+            android:textColor="#000000"/>
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/Age"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20sp"
+            android:text="Age\n\n"
+            android:textSize="22sp"
+            android:padding="10sp"
+            android:textColor="#000000"/>
+
+    </LinearLayout>
+</LinearLayout>
+
+#Create new kotlin fiile
+
+#click>>Kotlin+java>>right click on com.example.appname>>new>>Kotlin class/file>>DBHelper
+
+#DBHelper.kt
+
+import android.content.ContentValues
+import android.content.Context
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
+
+class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
+    SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION){
+
+    override fun onCreate(db: SQLiteDatabase) {
+        val query = ("CREATE TABLE " + TABLE_NAME + " ("
+                + ID_COL + " INTEGER PRIMARY KEY, " +
+                NAME_COl + " TEXT," +
+                AGE_COL + " TEXT" + ")")
+
+        db.execSQL(query)
+    }
+
+    override fun onUpgrade(db: SQLiteDatabase, p1: Int, p2: Int) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME)
+        onCreate(db)
+    }
+
+    fun addName(name : String, age : String ){
+        val values = ContentValues()
+        values.put(NAME_COl, name)
+        values.put(AGE_COL, age)
+        val db = this.writableDatabase
+        db.insert(TABLE_NAME, null, values)
+        db.close()
+    }
+    fun getName(): Cursor? {
+        val db = this.readableDatabase
+        return db.rawQuery("SELECT * FROM " + TABLE_NAME, null)
+
+    }
+
+    companion object{
+        private val DATABASE_NAME = "MY_DATABASE"
+        private val DATABASE_VERSION = 1
+        val TABLE_NAME = "Student"
+        val ID_COL = "id"
+        val NAME_COl = "name"
+        val AGE_COL = "age"
+    }
+
+}
+
+#MainActivity.kt
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
+
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.sqldatabaseexample.ui.theme.SqlDatabaseExampleTheme
+
+class MainActivity : AppCompatActivity() {
+    lateinit var addName:Button
+    lateinit var enterName:EditText
+    lateinit var enterAge:EditText
+    lateinit var printName:Button
+    lateinit var Name:TextView
+    lateinit var Age:TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        addName=findViewById(R.id.addName)
+        enterName=findViewById(R.id.enterName)
+        enterAge=findViewById(R.id.enterAge)
+        printName=findViewById(R.id.printName)
+        Name=findViewById(R.id.Name)
+        Age=findViewById(R.id.Age)
+
+        addName.setOnClickListener{
+            val db = DBHelper(this, null)
+            val name = enterName.text.toString()
+            val age = enterAge.text.toString()
+            db.addName(name, age)
+            Toast.makeText(this, name + " added to database", Toast.LENGTH_LONG).show()
+            enterName.text.clear()
+            enterAge.text.clear()
+        }
+
+        printName.setOnClickListener{
+            val db = DBHelper(this, null)
+            val cursor = db.getName()
+            cursor!!.moveToFirst()
+            Name.append(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.NAME_COl)) + "\n")
+            Age.append(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.AGE_COL)) + "\n")
+            while(cursor.moveToNext()){
+                Name.append(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.NAME_COl)) + "\n")
+                Age.append(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.AGE_COL)) + "\n")
+            }
+            cursor.close()
+        }
+
+    }
+}
+
+
+##Camera
+
+##AndroidManifest file
+
+android:theme="@style/Theme.AppCompat"
+android:theme="@style/Theme.AppCompat"
+
+##GradleScript Module:App
+
+implementation("com.google.android.material:material:1.11.0")
+
+
+##MainActivity.kt
+
+
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.graphics.Bitmap
+import android.os.Bundle
+import android.provider.MediaStore
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var cameraOpenId: Button
+    lateinit var clickImageId: ImageView
+
+    @SuppressLint("MissingInflatedId")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        cameraOpenId = findViewById(R.id.camera_button)
+        clickImageId = findViewById(R.id.click_image)
+        cameraOpenId.setOnClickListener(View.OnClickListener { v: View? ->
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(cameraIntent, pic_id)
+        })
+
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == pic_id) {
+            val photo = data!!.extras!!["data"] as Bitmap?
+            clickImageId.setImageBitmap(photo)
+        }
+    }
+
+    companion object {
+        private const val pic_id = 123
+    }
+
+}
+
+##activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/camera_button"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="150dp"
+        android:text="Camera" />
+
+    <ImageView
+        android:id="@+id/click_image"
+        android:layout_width="350dp"
+        android:layout_height="450dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="10dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
