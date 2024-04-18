@@ -1,0 +1,266 @@
+# practical : 1 
+# Aim : write a program to implement CRUD operation on mongoDB 
+
+
+#create database
+use student
+
+#insert data
+db.student.insert({regNo:"3014",name:"md maksud",course:{courseName:"bsc.cs",duration:"3 years"},address:{city:"mumbai",state:"MH",country:"india"}})
+
+#find / fetch data from database
+db.student.find()
+
+#find / fetch data from database
+db.student.find().pretty()
+
+#update data
+db.student.update({"regNo":"3014"},{$set:{"state":"Maharashtra"}})
+
+#delete data from database
+db.student.remove({regNo:"3014"})
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# practical : 2A
+# Aim : write a program to implement embeded data model
+
+#create database
+use employee
+
+#insert data
+db.employee.insert({empId:"10025",personal_details:{first_name:"raj",last_name:"yadav",dob:"12-12-2000"},contact:{email:"rajyadav@gmail.com",phone:"9696961234"},address:{city:"mumbai",area:"thane",state:"mh"}})
+
+#find data
+db.employee.find()
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+#practial : 2B
+# Aim : write a program to implement normalized data model
+
+#create database
+use employee
+
+#insert data
+db.employee.insert({emp_id:{_id:"objectid101",emp_id:"10025"},personal_details:{_id:"objectid102",empdocid:"objectid101",first_name:"raj",last_name:"yadav",dob:"12-12-2000"},conatct:{_id:"objectid103",empdocid:"objectid101",email:"rajyadav@gmail.com",phone:"9696961234"},address:{_id:"objectid104",empdocid:"objectid101",city:"mumbai",area:"thane",state:"maharashtra"}})
+
+#find data
+db.employee.find()
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# practical : 3 
+# Aim : write a program to validation of from using angulsr js
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>validation</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script type="text/javascript">
+        var app=angular.module("formApp",[])
+        app.controller("formCtrl",function($scope){
+            $scope.sendForm=function(){
+                $scope.msg="form validated";
+            };
+        });
+    </script>
+</head>
+<body>
+    <div ng-app="formApp" ng-ctrl="formCtrl">
+        <form name="personForm" ng-submit="sendForm()">
+            First_Name: <input type="text" name="first_Name" ng-model="person.fname" required />
+            <span nd-show="personForm.first_Name.$error.required"> required !!</span> <br/><br/>
+            Last_Name: <input type="text" name="Last_Name" ng-model="person.lname" required />
+            <span nd-show="personForm.Last_Name.$error.required"> required !!</span> <br/><br/>
+            <button type="submit">submit form</button><br/><br/>
+            <span>{{msg}}</span>
+        </form>
+    </div>
+</body>
+</html>
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# practical : 4
+# Aim : write a program to implement module and controller in angular js
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script type="text/javascript">
+        var app=angular.module("myApp",[]);
+        app.controller("myCtrl",function($scope){
+            $scope.firstName="md";
+            $scope.lastName="maksud";
+        });
+    </script>
+</head>
+<body>
+    <div ng-app="myApp" ng-controller="myCtrl">
+        {{firstName+" "+lastName}}
+    </div>
+</body>
+</html>
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# practical : 5A
+# Aim : create a simple html "hello wolrd" project using angular js framework and apply ng-controller
+
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title>helloworld</title>
+</head>
+<body>
+    <h1 ng-controller="HelloworldCtrl">{{message}}</h1>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        angular.module("app",[]).controller("HelloworldCtrl",function($scope){
+            $scope.message = "hello wolrd";
+        });
+    </script>
+</body>
+</html>
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# practical : 5B
+# Aim : create a simple html project using angular js framework and apply ng-model and expressions
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+</head>
+<body>
+    <h1>sample application</h1>
+    <div ng-app="">
+        <p>enter your name: <input type="text" ng-model="name"></p>
+        <p>hello <span ng-bind="name"></span>!</p>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</body>
+</html>
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# practical : 6
+# Aim : create an application fro student records using angular js
+
+<!DOCTYPE html>
+<html ng-app="studentApp">
+    <head>
+        <title>Document</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+    </head>
+    <body ng-controller="studentController">
+        <h1>student information</h1>
+        <form ng-submit="submitstudentForm()" action="and.html">
+            <label for="firstname">First Name</label><br/>
+            <input type="text" id="firstName" ng-model="student.firstName"/><br/>
+            <label for="lastnane">Last Name</label><br/>
+            <input type="text" id="lastName" ng-model="student.lastName"/><br/>
+            <label for="dob">DOB</label><br/>
+            <input type="date" id="dob" ng-model="studnet.DOB"/><br/><br/>
+            <label for="gender">gender</label><br/>
+            <select Id="gender" ng-model="student.gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select><br/><br/>
+            <span>TrainingType:</span><br/>
+            <label><input value="online" type="radio" name="training" ng-model="student.TrainingType"/>Online</label><br/>
+            <label><input value="onsite" type="radio" name="training" ng-model="student.TrainingType"/>Onsite</label><br/>
+            <span>subjects</span><br/>
+            <label><input type="checkbox" ng-model="student.maths"/>Maths</label><br/>
+            <label><input type="checkbox" ng-model="student.physics"/>Physics</label><br/>
+            <label><input type="checkbox" ng-model="student.chemistry"/>Chemistry</label><br/>
+            <input type="submit" value="submit"/>
+            <input type="reset" ng-click="resetform()" value="Reset" /><br/>
+        </form>
+        <script>
+            //1. create app module
+            var studentApp = angular.module("studentApp")
+            //2. create controller
+            studentApp.controller('studentController', function($scope, $http){
+                //3. attach original student model coject
+                $scope.originalstudent = {
+                    firstName: "Vrushali",
+                    LastName:"ghatpande",
+                    DOB: new Date('01/31/1988'),
+                    gender:"female",
+                    trainingType: 'online',
+                    maths:false,
+                    physics: true,
+                    chemistry:true
+                };
+                    //4. copyoriginalStudent to student will be bind a to a fors
+                $scope.student=angular.copy($scope.originalstudent);
+                //5. createsubmitstudentform(), this will be calledlemen user submits the from
+                $scope.submitStudentForm=function (){
+                    //send $http request to save Studnet
+                };
+                //6. create resetForm() function, this will be called when user click on reset button
+                $scope.resetForm=function(){
+                    $scope.student=angular.copy($scope,originalstudent);
+                };
+            });
+        </script>
+    </body>
+</html>
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# practical : 7
+# Aim : write a program to implement error handling in angular js
+
+<!DOCTYPE html>
+<html ng-app="studentApp">
+<head>
+    <title>error handling</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body class="container" ng-controller="studentController">
+    Status: {{status}} <br/>
+    Data : {{data}} <br/>
+    <input type="button" value="get Data" ng-click="getStudent()">
+    <script>
+        var app=angular.module("studentApp",[]);
+        app.config(function($provide){
+            $provide.decorator("$exceptionHandler",function($delegate){
+                return function(exception, cause){
+                    $delegate(exception,cause);
+                    alert("error, occured ! please contatc admin");
+                };
+            });
+        });
+        app.controller("studentController",function($scope){
+            var onSuccess=function(response){
+                $scope.status=response.status;
+                $scope.data=response.data;
+            };
+            var onError=function(response){
+                $scope.status=response.status;
+                $scope.data=response.data;
+            };
+            $scope.getStudent=function(){
+                $http.get("/getdata").then(onSuccess,onError)
+            };
+        });
+        
+    </script>
+</body>
+</html>
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
