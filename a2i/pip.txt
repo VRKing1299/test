@@ -1,0 +1,15 @@
+pip install numpy
+
+pip install pandas
+
+python -m pip install -U matplotlib
+
+pip install -U scikit-learn
+
+pip install tensorflow
+
+pip install seaborn
+
+pip install plotly
+
+pip install apyori

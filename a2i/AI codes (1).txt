@@ -1,0 +1,546 @@
+Libraries to import
+(pip install numpy,pandas,matplotlib,scikit-learn,tensorflow)
+==============================================================================================================
+###Python Code for Breadth First Search algorithm
+
+from collections import deque
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+
+    while queue:
+        vertex = queue.popleft()
+        if vertex not in visited:
+            visited.add(vertex)
+            print(vertex)
+
+            # Explore neighbors
+            neighbors = graph[vertex]
+            for neighbor in neighbors:
+                if neighbor not in visited:
+                    queue.append(neighbor)
+# Example usage
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+start_vertex = 'A'
+bfs(graph, start_vertex)
+===============================================================================================================
+###Python code for Iterative Depth First Search algorithm
+
+from collections import defaultdict
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)
+    # Add an edge to the graph (undirected)
+    def add_edge(self, u, v):
+        self.graph[u].append(v)
+        self.graph[v].append(u)  # Since it's undirected, add both directions
+    # Iterative DFS to find a path from start to end
+    def iterative_dfs(self, start, end):
+        if start == end:
+            return [start]
+        visited = set()  # Set to keep track of visited nodes
+        stack = [(start, [start])]  # Stack to store (current_node, path_to_node)
+        while stack:
+            current_vertex, path = stack.pop()  # Get the current node and the path so far
+            visited.add(current_vertex)  # Mark the node as visited
+            for neighbor in self.graph[current_vertex]:  # Explore neighbors
+                if neighbor not in visited:  # If neighbor hasn't been visited
+                    if neighbor == end:  # If the neighbor is the destination
+                        return path + [neighbor]  # Return the path including this neighbor
+                    stack.append((neighbor, path + [neighbor]))  # Otherwise, add to stack
+        return None  # Return None if no path found
+# Example usage:
+if __name__ == "__main__":
+    g = Graph()
+    g.add_edge(1, 2)
+    g.add_edge(1, 3)
+    g.add_edge(2, 4)
+    g.add_edge(2, 5)
+    g.add_edge(3, 6)
+    g.add_edge(3, 7)
+    g.add_edge(4, 8)
+    g.add_edge(4, 9)
+    g.add_edge(5, 10)
+    g.add_edge(5, 11)
+    g.add_edge(6, 12)
+    g.add_edge(6, 13)
+    g.add_edge(7, 14)
+    g.add_edge(7, 15)
+    start_node = 1
+    end_node = 9
+    # Find the shortest path using DFS
+    shortest_path = g.iterative_dfs(start_node, end_node)
+    if shortest_path:
+        print(f"Shortest path from {start_node} to {end_node}: {shortest_path}")
+    else:
+        print(f"No path found from {start_node} to {end_node}")
+
+OR.....
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+visited = set()
+
+def dfs(visited, graph, node):
+    if node not in visited:
+        print(node)
+        visited.add(node)
+        for neighbour in graph[node]:
+            dfs(visited, graph, neighbour)
+
+print("Following is the Depth First Search")
+dfs(visited, graph, 'A')
+
+=================================================================================================================
+####Code: Implement the A* Search algorithm for solving a pathfinding problem. 
+
+import queue as Q
+# Graph representing distances between nodes (cities)
+dict_gn = {
+    'A': {'B': 1, 'C': 3},
+    'B': {'A': 1, 'D': 5, 'E': 4},
+    'C': {'A': 3, 'F': 2},
+    'D': {'B': 5, 'G': 2},
+    'E': {'B': 4, 'G': 3},
+    'F': {'C': 2, 'G': 6},
+    'G': {'D': 2, 'E': 3, 'F': 6}
+}
+# Heuristic function h(n) based on a rough estimate to the goal
+dict_hn = {
+    'A': 7,
+    'B': 6,
+    'C': 5,
+    'D': 4,
+    'E': 3,
+    'F': 4,
+    'G': 0  # Goal node has a heuristic of 0
+}
+start = 'A'
+goal = 'G'
+result = ''
+# Function to calculate f(n) = g(n) + h(n)
+def get_fn(citystr):
+    cities = citystr.split(",")
+    gn = 0
+    for ctr in range(0, len(cities) - 1):
+        gn += dict_gn[cities[ctr]][cities[ctr + 1]]  # g(n) is the path cost
+    hn = dict_hn[cities[-1]]  # h(n) is the heuristic estimate
+    return hn + gn  # f(n) = g(n) + h(n)
+# Function to expand nodes and perform A* search
+def expand(cityq):
+    global result
+    tot, citystr, thiscity = cityq.get()  # Get the current city and path
+    if thiscity == goal:
+        result = citystr + "::" + str(tot)  # If goal is reached, store the result
+        return
+    for cty in dict_gn[thiscity]:  # Explore all neighboring cities
+        new_path = citystr + "," + cty
+        cityq.put((get_fn(new_path), new_path, cty))  # Push to priority queue with f(n)
+    expand(cityq)  # Recursive expansion
+# Main function to initiate A* search
+def main():
+    cityq = Q.PriorityQueue()  # Priority queue for A* search
+    thiscity = start
+    cityq.put((get_fn(start), start, thiscity))  # Add start node to queue
+    expand(cityq)  # Start expanding nodes
+    print("The A* path with the total cost is:")
+    print(result)
+# Run the main function
+main()
+============================================================================================================
+####Recursive Best-First Search 
+
+import queue as Q 
+# Sample graph representation
+dict_gn = {
+    'Arad': {'Zerind': 75, 'Sibiu': 140, 'Timisoara': 118},
+    'Zerind': {'Arad': 75, 'Oradea': 71},
+    'Oradea': {'Zerind': 71, 'Sibiu': 151},
+    'Sibiu': {'Arad': 140, 'Oradea': 151, 'Fagaras': 99, 'Rimnicu Vilcea': 80},
+    'Timisoara': {'Arad': 118, 'Lugoj': 111},
+    'Lugoj': {'Timisoara': 111, 'Mehadia': 70},
+    'Mehadia': {'Lugoj': 70, 'Drobeta': 75},
+    'Drobeta': {'Mehadia': 75, 'Craiova': 120},
+    'Craiova': {'Drobeta': 120, 'Rimnicu Vilcea': 146},
+    'Rimnicu Vilcea': {'Craiova': 146, 'Sibiu': 80, 'Pitesti': 97},
+    'Pitesti': {'Rimnicu Vilcea': 97, 'Bucharest': 101},
+    'Bucharest': {'Pitesti': 101, 'Giurgiu': 90},
+    'Giurgiu': {'Bucharest': 90},
+    'Fagaras': {'Sibiu': 99, 'Bucharest': 211}
+}
+# Heuristic values for each city
+dict_hn = {
+    'Arad': 366,
+    'Zerind': 374,
+    'Oradea': 380,
+    'Sibiu': 253,
+    'Timisoara': 329,
+    'Lugoj': 244,
+    'Mehadia': 241,
+    'Drobeta': 242,
+    'Craiova': 160,
+    'Rimnicu Vilcea': 193,
+    'Pitesti': 98,
+    'Bucharest': 0,
+    'Giurgiu': 77,
+    'Fagaras': 178
+}
+start = 'Arad' 
+goal = 'Bucharest' 
+result = '' 
+def get_fn(citystr): 
+    cities = citystr.split(",") 
+    gn = 0 
+    for ctr in range(len(cities) - 1):
+        gn += dict_gn[cities[ctr]][cities[ctr + 1]]
+    hn = dict_hn[cities[-1]]
+    return hn + gn 
+def printout(cityq): 
+    for i in range(cityq.qsize()):
+        print(cityq.queue[i]) 
+def expand(cityq): 
+    global result 
+    tot, citystr, thiscity = cityq.get()
+    nexttot = 999 
+    if not cityq.empty(): 
+        nexttot, nextcitystr, nextthiscity = cityq.queue[0]
+    if thiscity == goal and tot < nexttot:
+        result = citystr + "::" + str(tot) 
+        return 
+    print("Expanded city ---------", thiscity) 
+    print("Second best f(n)---------", nexttot) 
+    tempq = Q.PriorityQueue() 
+    for cty in dict_gn[thiscity]: 
+        tempq.put((get_fn(citystr + ',' + cty), citystr + ',' + cty, cty)) 
+    for ctr in range(1, 3): 
+        ctrtot, ctrcitystr, ctrthiscity = tempq.get() 
+        if ctrtot < nexttot: 
+            cityq.put((ctrtot, ctrcitystr, ctrthiscity)) 
+        else: 
+            cityq.put((ctrtot, citystr, thiscity)) 
+            break 
+    printout(cityq) 
+    expand(cityq) 
+def main(): 
+    cityq = Q.PriorityQueue() 
+    thiscity = start 
+    cityq.put((999, "NA", "NA")) 
+    cityq.put((get_fn(start), start, thiscity)) 
+    expand(cityq) 
+    print(result) 
+main() 
+
+==============================================================================================================
+####The following is the Python code to implement Naïve Bayes Classifier
+(To run this code, Scikit-Learn must be installed (pip install scikit-learn).
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+# Load the Iris dataset
+iris = load_iris()
+X = iris.data
+y = iris.target
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, 
+random_state=42)
+# Create a Naïve Bayes classifier (Gaussian Naïve Bayes for continuous features)
+clf = GaussianNB()
+# Train the classifier on the training data
+clf.fit(X_train, y_train)
+# Make predictions on the test data
+y_pred = clf.predict(X_test)
+# Calculate and print the accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+=====================================================================================
+####Aim: 
+1) Implement the SVM algorithm for binary classification.
+2) Train an SVM model using a given dataset and optimize its parameters.
+3) Evaluate the performance of the SVM model on test data and analyze the results.
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Load the Iris dataset
+data = pd.read_csv('Iris.csv')
+
+# Drop the 'Id' column if present (assuming the dataset contains this)
+if 'Id' in data.columns:
+    data = data.drop('Id', axis=1)
+
+# Split features (X) and target (y)
+# The target in the Iris dataset is often in the 'species' column
+X = data.drop('species', axis=1)  # Features
+y = data['species']  # Target
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Create an SVM classifier with a linear kernel
+svm_classifier = SVC(kernel='linear')
+# Fit the classifier to the training data
+svm_classifier.fit(X_train, y_train)
+# Make predictions on the test data
+y_pred = svm_classifier.predict(X_test)
+# Calculate the accuracy of the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")
+
+====================================================================================
+####AIM:  Adaboost Ensemble Learning 
+● Implement the Adaboost algorithm to create an ensemble of weak classifiers.
+● Train the ensemble model on a given dataset and evaluate its performance
+● Compare the results with individual weak classifiers
+
+import pandas
+from sklearn import model_selection
+from sklearn.ensemble import AdaBoostClassifier
+
+# Correct URL
+url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv"
+
+names = ['preg', 'plas', 'pres', 'skin', 'test', 'mass', 'pedi', 'age', 'class']
+dataframe = pandas.read_csv(url, names=names)
+
+# Prepare the data
+array = dataframe.values
+X = array[:, 0:8]
+Y = array[:, 8]
+seed = 7
+num_trees = 30
+
+# Create AdaBoost model with the SAMME algorithm to prevent future warnings
+model = AdaBoostClassifier(n_estimators=num_trees, random_state=seed, algorithm='SAMME')
+
+# Perform cross-validation
+results = model_selection.cross_val_score(model, X, Y, cv=10)
+
+# Output the mean accuracy
+print(results.mean())
+
+=================================================================================================
+####Aim:
+4. Explore and experiment with TensorFlow tools and libraries.
+5. Perform a demonstration or mini-project showcasing the capabilities of the tools.
+6. Discuss and present the findings and potential applications
+
+import tensorflow as tf
+import numpy as np
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+# Step 1: Prepare a dataset of labeled emails (spam and non-spam)
+emails = [
+    "Buy cheap watches! Free shipping!",
+    "Meeting for lunch today?",
+    "Claim your prize! You've won $1,000,000!",
+    "Important meeting at 3 PM.",
+]
+labels = [1, 0, 1, 0]  # 1 for spam, 0 for non-spam
+
+# Step 2: Tokenize and pad the email text data
+max_words = 1000
+max_len = 50
+tokenizer = Tokenizer(num_words=max_words, oov_token="<OOV>")
+tokenizer.fit_on_texts(emails)
+sequences = tokenizer.texts_to_sequences(emails)
+X_padded = pad_sequences(sequences, maxlen=max_len, padding="post", truncating="post")
+
+# Step 3: Define the neural network model
+model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(input_dim=max_words, output_dim=16),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(16, activation='relu'),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Step 4: Define training data and labels as NumPy arrays
+training_data = np.array(X_padded)
+training_labels = np.array(labels)
+
+# Step 5: Train the model
+model.fit(training_data, training_labels, epochs=10, batch_size=2)
+
+# Step 6: Test if 'Spam.txt' is spam or not
+file_path = "NSpam.txt"
+
+try:
+    # Read the content of the 'Spam.txt' file
+    with open(file_path, "r", encoding="utf-8") as file:
+        sample_email_text = file.read()
+
+    # Tokenize and pad the sample email text
+    sequences_sample = tokenizer.texts_to_sequences([sample_email_text])
+    sample_email_padded = pad_sequences(sequences_sample, maxlen=max_len, padding="post", truncating="post")
+
+    # Use the trained model to make predictions
+    prediction = model.predict(sample_email_padded)[0][0]  # Extract the prediction value from the result
+
+    # Set a classification threshold (e.g., 0.5)
+    threshold = 0.5
+
+    # Classify the sample email based on the threshold
+    if prediction > threshold:
+        print(f"Sample Email ('{file_path}'): SPAM")
+    else:
+        print(f"Sample Email ('{file_path}'): NOT SPAM")
+
+except FileNotFoundError:
+    print(f"Error: '{file_path}' not found. Please check the file path and try again.")
+
+=====================================================================================================================================
+###Aim:- Implement the K-NN Algorithm for classification or regression.
+Apply K-NN Algorithm on the given dataset & predict the class or value for test data
+
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import roc_auc_score, roc_curve
+import matplotlib.pyplot as plt
+
+# Load and split the data
+df = pd.read_csv(r"C:\Users\user\Downloads\diabetes.csv")
+X_train, X_test, y_train, y_test = train_test_split(df.drop('Outcome', axis=1), df['Outcome'], test_size=0.4, random_state=42)
+
+# Grid Search for best n_neighbors
+param_grid = {'n_neighbors': np.arange(1, 50)}
+knn_cv = GridSearchCV(KNeighborsClassifier(), param_grid, cv=5)
+knn_cv.fit(X_train, y_train)
+
+# Train best model and predict
+best_knn = KNeighborsClassifier(n_neighbors=knn_cv.best_params_['n_neighbors']).fit(X_train, y_train)
+y_pred_proba = best_knn.predict_proba(X_test)[:, 1]
+
+# Calculate and print ROC AUC score
+roc_auc = roc_auc_score(y_test, y_pred_proba)
+print(f"Best Params: {knn_cv.best_params_}, Best Score: {knn_cv.best_score_:.4f}, ROC AUC: {roc_auc:.4f}")
+
+# Plot ROC curve
+fpr, tpr, _ = roc_curve(y_test, y_pred_proba)
+plt.plot(fpr, tpr, label=f'K-NN (AUC = {roc_auc:.2f})')
+plt.xlabel('FPR')
+plt.ylabel('TPR')
+plt.title('ROC Curve')
+plt.legend()
+plt.show()
+============================================================================================================================
+###Aim:
+1. Implement the Feed Forward Backpropagation algorithm to train a neural network.
+2. Use a given dataset to train the neural network for a specific task.
+3. Evaluate the performance of the trained network on test data
+
+import numpy as np
+# Define the sigmoid activation function and its derivative
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+def sigmoid_derivative(x):
+    return x * (1 - x)
+# Define the neural network class
+class NeuralNetwork:
+    def __init__(self, input_size, hidden_size, output_size):
+        # Initialize weights with random values
+        self.weights_input_hidden = np.random.uniform(-1, 1, (input_size, hidden_size))
+        self.weights_hidden_output = np.random.uniform(-1, 1, (hidden_size, output_size))
+    def forward(self, inputs):
+        # Forward propagation
+        self.hidden_input = np.dot(inputs, self.weights_input_hidden)
+        self.hidden_output = sigmoid(self.hidden_input)
+        self.output_input = np.dot(self.hidden_output, self.weights_hidden_output)
+        self.predicted_output = sigmoid(self.output_input)
+        return self.predicted_output
+    def backward(self, inputs, target, learning_rate):
+        # Backpropagation
+        error = target - self.predicted_output
+        delta_output = error * sigmoid_derivative(self.predicted_output)
+        error_hidden = delta_output.dot(self.weights_hidden_output.T)
+        delta_hidden = error_hidden * sigmoid_derivative(self.hidden_output)        
+        # Update weights
+        self.weights_hidden_output += np.outer(self.hidden_output, delta_output) * learning_rate
+        self.weights_input_hidden += np.outer(inputs, delta_hidden) * learning_rate
+    def train(self, training_data, targets, epochs, learning_rate):
+        for epoch in range(epochs):
+            for i in range(len(training_data)):
+                inputs = training_data[i]
+                target = targets[i]
+                self.forward(inputs)
+                self.backward(inputs, target, learning_rate)
+    def predict(self, inputs):
+        return self.forward(inputs)
+# Define XOR dataset
+training_data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+targets = np.array([[0], [1], [1], [0]])
+# Create and train the neural network
+input_size = 2
+hidden_size = 4
+output_size = 1
+learning_rate = 0.1
+epochs = 10000
+nn = NeuralNetwork(input_size, hidden_size, output_size)
+nn.train(training_data, targets, epochs, learning_rate)
+# Test the trained network
+for i in range(len(training_data)):
+    inputs = training_data[i]
+    prediction = nn.predict(inputs)
+    print(f"Input: {inputs}, Predicted Output: {prediction}")
+=====================================================================================================================================
+####Aim: 
+1) Implement the Decision Tree Learning algorithm to build a decision tree for a given dataset
+2) Evaluate the accuracy and effectiveness of the decision tree on test data
+3) Visualize and interpret the generated decision tree.
+
+# Import necessary libraries
+import numpy as np
+import pandas as pd # Import Pandas for data loading
+import matplotlib.pyplot as plt
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+# Load your dataset from a local file (e.g., CSV)
+# Replace 'your_dataset.csv' with the actual path to your dataset file
+data = pd.read_csv('diabetes.csv')
+# Assuming the target variable is in a column named 'target'
+X = data.drop('Outcome', axis=1)
+y = data['Outcome']
+# Split the dataset into a training set and a testing set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, 
+random_state=42)
+# Create a Decision Tree classifier
+clf = DecisionTreeClassifier()
+# Fit the classifier to the training data
+clf.fit(X_train, y_train)
+# Make predictions on the test data
+y_pred = clf.predict(X_test)
+# Calculate the accuracy of the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")
+# Visualize and interpret the generated decision tree
+plt.figure(figsize=(12, 8))
+plot_tree(clf, filled=True, feature_names=X.columns, 
+class_names=y.unique().astype(str))
+plt.title("Decision Tree Visualization")
+plt.show()
+=============================================================================================================================================
+
+
