@@ -1,0 +1,22 @@
+practicle 2
+ Read data from CSV and JSON files into a data frame.
+ Perform basic data pre-processing tasks such as handling missing values and outliers.
+ Manipulate and transform data using functions like filtering, sorting, and grouping
+
+practicle 3
+Feature Scaling and Dummification
+ Apply feature-scaling techniques like standardization and normalization to numerical features.
+ Perform feature dummification to convert categorical variables into numerical representations.
+
+practicle 4
+Hypothesis Testing
+ Formulate null and alternative hypotheses for a given problem.
+ Conduct a hypothesis test using appropriate statistical tests (e.g., t-test, chisquare test).
+ Interpret the results and draw conclusions based on the test outcomes.
+
+practicle 5
+ANOVA (Analysis of Variance)
+ Perform one-way ANOVA to compare means across multiple groups.
+ Conduct post-hoc tests to identify significant differences between group means
+
+practicle 6 

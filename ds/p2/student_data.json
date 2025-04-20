@@ -1,0 +1,37 @@
+[
+  {
+    "Student ID": 101,
+    "Name": "John Doe",
+    "Age": 20,
+    "Grade": "A",
+    "Marks": 92
+  },
+  {
+    "Student ID": 102,
+    "Name": "Jane Smith",
+    "Age": 22,
+    "Grade": "B",
+    "Marks": 85
+  },
+  {
+    "Student ID": 103,
+    "Name": "Emily Johnson",
+    "Age": 21,
+    "Grade": "A",
+    "Marks": 90
+  },
+  {
+    "Student ID": 104,
+    "Name": "Michael Brown",
+    "Age": 23,
+    "Grade": "C",
+    "Marks": 72
+  },
+  {
+    "Student ID": 105,
+    "Name": "Sarah Lee",
+    "Age": 20,
+    "Grade": "B",
+    "Marks": 88
+  }
+]
